@@ -1,4 +1,4 @@
-use crate::compiler::token::Token;
+use crate::compiler::{char_iter::CharIter, token::Token};
 use either::Either;
 use regex::Regex;
 use std::collections::HashMap;
@@ -101,7 +101,7 @@ pub fn token_or_charlist_to_str(token: &Either<Token, IncompleteCharList>) -> St
 pub fn tokenize(code: &str, base_tree: &LexNode) -> Vec<Token> {
     println!("here");
     let mut tokens = Vec::with_capacity(code.len() / 3);
-    let mut curr_code = code.chars();
+    let mut curr_code = CharIter::new(code.chars());
 
     while let Some(token) = lex_token(&mut curr_code, base_tree) {
         tokens.push(token);
@@ -110,7 +110,10 @@ pub fn tokenize(code: &str, base_tree: &LexNode) -> Vec<Token> {
     tokens
 }
 
-fn lex_token(curr_code: &mut impl Iterator<Item = char>, base_tree: &LexNode) -> Option<Token> {
+fn lex_token<I: Iterator<Item = char>>(
+    curr_code: &mut CharIter<I>,
+    base_tree: &LexNode,
+) -> Option<Token> {
     let mut current_tree: &LexNode = base_tree;
     // NOTE
     // Holds the valid nodes we've traversed to but could be a later one
@@ -122,14 +125,14 @@ fn lex_token(curr_code: &mut impl Iterator<Item = char>, base_tree: &LexNode) ->
     // This should loop once for each node on the path to the current token being lexed
     // So for most tokens, this should only run once
     let mut n = 0;
-    while n < 4 {
+    'token_loop: loop {
         n += 1;
         println!("\n\n\n");
-        println!("parse_stack: {:?}", stack);
         if let Either::Left(token) = &current_tree.token {
             println!("on stack");
             stack.push(token.clone());
         }
+        println!("parse_stack: {:?}", stack);
 
         if current_tree.children.is_none() {
             println!("no children");
@@ -140,20 +143,30 @@ fn lex_token(curr_code: &mut impl Iterator<Item = char>, base_tree: &LexNode) ->
         println!("children: {:?}", children);
         let max_suffix_length = children
             .iter()
-            .map(|child| token_or_charlist_to_str(&child.1.token).len())
+            .map(|child| child.0.len())
             .max()
-            .unwrap_or_default()
-            - 1;
+            .unwrap_or_default();
         println!("max_suffix_length {:?}", max_suffix_length);
         let mut current_suffix = String::with_capacity(3);
 
+        // Token: +1=
+        // Token: +
+        // Token: 1
+        // "+1"
+
         // NOTE
         // This should loop once for each character in the node being lexed
-        loop {
+        'character_loop: loop {
             let c = match curr_code.next() {
-                Some(c) if c == ' ' => continue,
+                Some(c) if c == ' ' => {
+                    curr_code.push_str_front(&current_suffix);
+                    break 'token_loop;
+                }
                 Some(c) => c,
-                None => break,
+                None => {
+                    curr_code.push_str_front(&current_suffix);
+                    break 'token_loop;
+                }
             };
 
             current_suffix.push(c);
@@ -164,9 +177,9 @@ fn lex_token(curr_code: &mut impl Iterator<Item = char>, base_tree: &LexNode) ->
                 break;
             }
 
-            // TODO Find way to put the current_suffix back if we don't find anything
             if current_suffix.len() >= max_suffix_length {
-                break;
+                curr_code.push_str_front(&current_suffix);
+                break 'token_loop;
             }
         }
     }

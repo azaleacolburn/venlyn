@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::compiler::lexer::LexNode;
 
+pub mod char_iter;
 pub mod lexer;
 pub mod token;
 
@@ -20,6 +21,7 @@ pub fn lex_test() {
         .with_branch(plus_base)
         .with_branch(equal_base);
 
-    let code = "let=;";
-    lexer::tokenize(code, &base);
+    let code = "let=;=let==;;=;";
+    let tokens = lexer::tokenize(code, &base);
+    println!("{:?}", tokens)
 }
