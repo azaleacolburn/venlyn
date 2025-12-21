@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::compiler::lexer::LexNode;
 
 pub mod char_iter;
+pub mod lex_tree;
 pub mod lexer;
 pub mod token;
 
