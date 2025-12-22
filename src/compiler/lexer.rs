@@ -35,6 +35,7 @@ fn lex_token<I: Iterator<Item = char>>(
     base_tree: &LexNode,
 ) -> Option<Token> {
     // Special cases for number and identifier parsing
+    // TODO Find way to integrate this into the main LexTree system
     while let Some(c) = curr_code.peek()
         && c.is_whitespace()
     {
