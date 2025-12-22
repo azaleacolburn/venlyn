@@ -4,6 +4,7 @@ use regex::Regex;
 pub enum Token {
     Let,
     Id(String),
+    NumericalLiteral(i32),
 
     Plus,
     Minus,
@@ -31,6 +32,7 @@ impl From<Token> for Regex {
         let pattern = match value {
             Token::Let => "let",
             Token::Id(_) => "[a-z_][a-z0-9_]+",
+            Token::NumericalLiteral(_) => "-?[0-9]*",
             Token::CmpEq => r"==",
             Token::Eq => r"=",
             Token::Semi => ";",
@@ -82,7 +84,8 @@ impl From<Token> for &str {
             Token::BitOrEq => "|=",
             Token::BitAndEq => "&=",
 
-            Token::Id(_) => "[a-z_][a-z0-9_]+",
+            Token::Id(_id) => "",
+            Token::NumericalLiteral(_num) => "",
         }
     }
 }
@@ -113,6 +116,7 @@ impl From<Token> for String {
             Token::BitAndEq => "&=",
 
             Token::Id(_c) => "",
+            Token::NumericalLiteral(_c) => "",
         }
         .to_string()
     }
@@ -145,8 +149,12 @@ impl TryFrom<String> for Token {
             "|=" => Token::BitOrEq,
             "&=" => Token::BitAndEq,
 
+            num if value.chars().all(|c| c.is_numeric() || c == '-') => {
+                // TODO Don't unwrap
+                Token::NumericalLiteral(num.parse().unwrap())
+            }
             id if is_valid_identifier(id) => Token::Id(id.to_string()),
-            id => return Err(id.to_string()),
+            unknown => return Err(unknown.to_string()),
         };
 
         Ok(token)
