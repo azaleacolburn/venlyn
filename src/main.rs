@@ -1,5 +1,3 @@
-pub mod compiler;
+use lib_venlyn;
 
-fn main() {
-    compiler::lex_test();
-}
+fn main() {}

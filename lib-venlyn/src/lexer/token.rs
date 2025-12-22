@@ -1,6 +1,4 @@
-use regex::Regex;
-
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     Let,
     Id(String),
@@ -27,38 +25,38 @@ pub enum Token {
     Semi,
 }
 
-impl From<Token> for Regex {
-    fn from(value: Token) -> Self {
-        let pattern = match value {
-            Token::Let => "let",
-            Token::Id(_) => "[a-z_][a-z0-9_]+",
-            Token::NumericalLiteral(_) => "-?[0-9]*",
-            Token::CmpEq => r"==",
-            Token::Eq => r"=",
-            Token::Semi => ";",
-
-            Token::Plus => "+",
-            Token::Minus => "-",
-            Token::ForwardSlash => "/",
-            Token::Star => r"\*",
-
-            Token::BitXor => "^",
-            Token::BitOr => r"\|",
-            Token::BitAnd => r"&",
-
-            Token::PlusEq => r"\+=",
-            Token::MinusEq => r"\-=",
-            Token::DivEq => r"/=",
-            Token::MulEq => r"\*=",
-            Token::BitXorEq => r"^=",
-            Token::BitOrEq => r"\|=",
-            Token::BitAndEq => r"&=",
-        };
-
-        Regex::new(pattern).unwrap()
-    }
-}
-
+// impl From<Token> for Regex {
+//     fn from(value: Token) -> Self {
+//         let pattern = match value {
+//             Token::Let => "let",
+//             Token::Id(_) => "[a-z_][a-z0-9_]+",
+//             Token::NumericalLiteral(_) => "-?[0-9]*",
+//             Token::CmpEq => r"==",
+//             Token::Eq => r"=",
+//             Token::Semi => ";",
+//
+//             Token::Plus => "+",
+//             Token::Minus => "-",
+//             Token::ForwardSlash => "/",
+//             Token::Star => r"\*",
+//
+//             Token::BitXor => "^",
+//             Token::BitOr => r"\|",
+//             Token::BitAnd => r"&",
+//
+//             Token::PlusEq => r"\+=",
+//             Token::MinusEq => r"\-=",
+//             Token::DivEq => r"/=",
+//             Token::MulEq => r"\*=",
+//             Token::BitXorEq => r"^=",
+//             Token::BitOrEq => r"\|=",
+//             Token::BitAndEq => r"&=",
+//         };
+//
+//         Regex::new(pattern).unwrap()
+//     }
+// }
+//
 impl From<Token> for &str {
     fn from(value: Token) -> Self {
         match value {

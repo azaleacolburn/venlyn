@@ -1,8 +1,16 @@
+[workspace]
+members = ["lib-venlyn"]
+
 [package]
 name = "venlyn"
 version = "0.1.0"
+license = "MIT"
+authors = ["Azalea Colburn <azaleacolburn@gmail.com>"]
+description = "compiler for the venlyn language"
+categories = ["compiler"]
+readme = "README.md"
+repository = "https://github.com/azaleacolburn/venlyn"
 edition = "2024"
 
 [dependencies]
-either = "1.15.0"
-regex = "1.12.2"
+lib-venlyn = { path = "./lib-venlyn/", version = "0.1.0" }

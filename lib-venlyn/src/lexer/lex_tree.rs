@@ -2,9 +2,9 @@ use std::collections::HashMap;
 
 use either::Either;
 
-use crate::compiler::{
-    lexer::{str_to_token_or_charlist, token_or_charlist_to_str},
+use crate::lexer::{
     token::Token,
+    tokenizer::{str_to_token_or_charlist, token_or_charlist_to_str},
 };
 
 // The idea is that the IncompleteCharList would always fail to be converted to a Token

@@ -1,13 +1,13 @@
-use crate::compiler::lex_tree::LexNode;
+use crate::lexer::{lex_tree::LexNode, token::Token};
 
 pub mod char_iter;
 pub mod lex_tree;
-pub mod lexer;
+#[cfg(test)]
+pub mod test;
 pub mod token;
+pub mod tokenizer;
 
-pub fn lex_test() {
-    // TODO
-    // Right now, there isn't a way to construct '+' and '+= and requential tokens'
+fn construct_lex_tree() -> LexNode {
     let plus_tokens = vec!["="];
     let plus_base = LexNode::trunk("+").with_children_leaf(&plus_tokens);
 
@@ -20,7 +20,11 @@ pub fn lex_test() {
         .with_branch(plus_base)
         .with_branch(equal_base);
 
-    let code = "let this=4;let that = 5; let somet hing      = 1 == 4;";
-    let tokens = lexer::tokenize(code, &base);
-    println!("{:?}", tokens)
+    base
+}
+
+pub fn lex(code: impl ToString) -> Vec<Token> {
+    let tree = construct_lex_tree();
+
+    tokenizer::tokenize(&code.to_string(), &tree)
 }

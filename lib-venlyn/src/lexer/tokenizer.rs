@@ -1,11 +1,9 @@
-use crate::compiler::{
+use crate::lexer::{
     char_iter::CharIter,
     lex_tree::{IncompleteCharList, LexNode},
-    token::{Token, is_valid_identifier},
+    token::Token,
 };
 use either::Either;
-use regex::Regex;
-use std::collections::HashMap;
 
 pub fn str_to_token_or_charlist(s: impl ToString) -> Either<Token, IncompleteCharList> {
     let token_res = s.to_string().try_into();
@@ -41,7 +39,7 @@ fn lex_token<I: Iterator<Item = char>>(
     {
         curr_code.next();
     }
-    println!("first in new token {:?}", curr_code.peek());
+    // println!("first in new token {:?}", curr_code.peek());
     if let Some(token) = try_parse_number(curr_code) {
         return Some(token);
     }
@@ -57,7 +55,7 @@ fn lex_token<I: Iterator<Item = char>>(
     // This should loop once for each node on the path to the current token being lexed
     // So for most tokens, this should only run once
     'token_loop: loop {
-        println!("\n");
+        // println!("\n");
         if let Either::Left(token) = &current_tree.token {
             // println!("on stack");
             stack.push(token.clone());
@@ -76,7 +74,7 @@ fn lex_token<I: Iterator<Item = char>>(
             .map(|child| child.0.len())
             .max()
             .unwrap_or_default();
-        println!("max_suffix_length {:?}", max_suffix_length);
+        // println!("max_suffix_length {:?}", max_suffix_length);
         let mut current_suffix = String::with_capacity(3);
 
         // NOTE
@@ -105,7 +103,7 @@ fn lex_token<I: Iterator<Item = char>>(
             }
 
             if current_suffix.len() >= max_suffix_length {
-                println!("too big {:?}", current_suffix);
+                // println!("too big {:?}", current_suffix);
                 curr_code.push_str_front(&current_suffix);
                 break 'token_loop;
             }
