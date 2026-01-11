@@ -3,6 +3,13 @@ A programming language
 
 # Principles
 
+# Roadmap
+- [x] Tree-based Lexer
+- [ ] Parser
+- [ ] Code generation to WASM as an intermediate target
+- [ ] Transpiler from WASM to both AMD and Intel x86
+
+
 # Structures
 
 ## Declarations
