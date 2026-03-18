@@ -11,7 +11,7 @@ pub enum Type {
     I32,
     I64,
 
-    USIZE,
+    Usize,
 }
 
 pub struct ArgNode {
@@ -43,7 +43,7 @@ pub enum StatementNode {
         expr: Option<ExpressionNode>,
     },
     If {
-        condition: ConditionExpr,
+        condition: CondExpr,
         body: Block,
     },
     Loop {
@@ -53,20 +53,36 @@ pub enum StatementNode {
     Expression(ExpressionNode),
 }
 
-pub enum ConditionExpr {
-    ConditionTerm(ConditionTerm),
-
-    Operator(ConditionOperator),
+pub enum CondEpr {
+    Or((CondExpr, CondExpr)),
+    And((CondExpr, CondExpr)),
 }
 
-pub enum ConditionTerm {
-    Literal(bool),
-    ConditionExpr(Box<ConditionExpr>),
+pub enum CondTerm {
+    Eq((CondFactor, CondFactor)),
+    NEq((CondFactor, CondFactor)),
 }
 
-pub enum ConditionOperator {
-    Or,
-    And,
+pub enum CondFactor {
+    BoolLit(bool),
+    Var(String),
+    Expr(CondExpr),
 }
 
-pub enum ExpressionNode {}
+pub enum ArithExpr {
+    Mul((ArithTerm, ArithTerm)),
+    Div((ArithTerm, ArithTerm)),
+}
+
+pub enum ArithTerm {
+    Add((ArithFactor, ArithFactor)),
+    Sub((ArithFactor, ArithFactor)),
+}
+
+pub enum ArithFactor {
+    IntLit(i32),
+    FloatLit(f32),
+    Var(String),
+
+    Expr(Box<CondExpr>),
+}

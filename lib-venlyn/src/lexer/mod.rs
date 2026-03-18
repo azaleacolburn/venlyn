@@ -8,8 +8,10 @@ pub mod token;
 pub mod tokenizer;
 
 fn construct_lex_tree() -> LexNode {
-    let plus_tokens = vec!["="];
-    let plus_base = LexNode::trunk("+").with_children_leaf(&plus_tokens);
+    let eq = vec!["="];
+
+    let plus_base = LexNode::trunk("+").with_children_leaf(&eq);
+    let slash_base = LexNode::trunk("/").with_children_leaf(&eq);
 
     let equal_tokens = vec!["="];
     let equal_base = LexNode::trunk("=").with_children_leaf(&equal_tokens);
@@ -17,6 +19,7 @@ fn construct_lex_tree() -> LexNode {
     let base_tokens = vec!["let", ";"];
     let base = LexNode::root()
         .with_children_leaf(&base_tokens)
+        .with_branch(slash_base)
         .with_branch(plus_base)
         .with_branch(equal_base);
 

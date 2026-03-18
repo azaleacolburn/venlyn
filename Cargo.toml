@@ -1,5 +1,5 @@
 [workspace]
-members = ["lib-venlyn"]
+members = ["lib-venlyn", "lib-venlyn-proc"]
 
 [package]
 name = "venlyn"
@@ -14,3 +14,4 @@ edition = "2024"
 
 [dependencies]
 lib-venlyn = { path = "./lib-venlyn/", version = "0.1.0" }
+lib-venlyn-proc = { path = "./lib-venlyn-proc/", version = "0.1.0" }

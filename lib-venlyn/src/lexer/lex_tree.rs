@@ -85,6 +85,4 @@ impl LexNode {
 
         self
     }
-
-    pub fn build() {}
 }

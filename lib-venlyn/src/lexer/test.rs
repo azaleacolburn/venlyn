@@ -55,7 +55,9 @@ pub fn weird_lex_tests() {
     assert!(results.iter().all(Result::is_ok));
 }
 fn run_test<'a>(test: &'a LexTest) -> Result<(), (&'a LexTest<'a>, Vec<T>)> {
+    println!("{:?}", test.code);
     let tokens = lexer::lex(test.code);
+    println!("{:?}", tokens);
     match tokens == test.tokens.to_vec() {
         true => Ok(()),
         false => Err((test, tokens)),
