@@ -36,11 +36,11 @@ pub enum StatementNode {
     Declaration {
         id: String,
         r#type: Type,
-        expr: Option<ExpressionNode>,
+        expr: Option<CondExpr>,
     },
     Assignment {
         id: String,
-        expr: Option<ExpressionNode>,
+        expr: CondExpr,
     },
     If {
         condition: CondExpr,
@@ -50,12 +50,12 @@ pub enum StatementNode {
         body: Block,
     },
     Break,
-    Expression(ExpressionNode),
+    Expression(CondExpr),
 }
 
-pub enum CondEpr {
-    Or((CondExpr, CondExpr)),
-    And((CondExpr, CondExpr)),
+pub enum CondExpr {
+    Or((CondTerm, CondTerm)),
+    And((CondTerm, CondTerm)),
 }
 
 pub enum CondTerm {
@@ -66,7 +66,7 @@ pub enum CondTerm {
 pub enum CondFactor {
     BoolLit(bool),
     Var(String),
-    Expr(CondExpr),
+    Expr(Box<CondExpr>),
 }
 
 pub enum ArithExpr {
@@ -83,6 +83,7 @@ pub enum ArithFactor {
     IntLit(i32),
     FloatLit(f32),
     Var(String),
+    FunctionCall { name: String, args: Vec<CondExpr> },
 
     Expr(Box<CondExpr>),
 }
