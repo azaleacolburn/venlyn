@@ -1,8 +1,9 @@
 use crate::lexer::token::Token;
 
-pub struct GrammarTree {
-    token: Option,
-    children: Vec<GrammarTree>,
+pub struct Parser {
+    tokens: Vec<Tokens>,
 }
 
-fn parse(token: Vec<Token>, grammar: GrammarTree) -> Ast {}
+fn parse(token: Vec<Token>) -> Ast {
+    match token {}
+}

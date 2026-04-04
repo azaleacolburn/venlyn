@@ -62,12 +62,9 @@ fn lex_token<I: Iterator<Item = char>>(
         }
         // println!("parse_stack: {:?}", stack);
 
-        if current_tree.children.is_none() {
-            // println!("no children");
+        let Some(children) = current_tree.children else {
             break;
         }
-
-        let children = current_tree.children.as_ref().unwrap();
         // println!("children: {:?}", children);
         let max_suffix_length = children
             .iter()
