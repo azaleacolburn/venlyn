@@ -1,4 +1,12 @@
-pub use lib_venlyn;
-pub use lib_venlyn_proc;
+use crate::lexer::lex;
 
-fn main() {}
+mod lexer;
+mod parser;
+mod token;
+
+fn main() {
+    let string = "fn my_function(){\nlet my_int = 0;}";
+    let tokens = lex(string);
+
+    println!("{:?}", tokens);
+}
