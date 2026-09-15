@@ -3,6 +3,8 @@ use std::str::FromStr;
 use regex::Regex;
 use strum_macros::{EnumIter, EnumString};
 
+use crate::ast::Type;
+
 #[derive(Debug, Clone, PartialEq, EnumIter, EnumString)]
 pub enum Token {
     Let,
@@ -42,6 +44,7 @@ pub enum Token {
     // Must come after all other tokens they could match instead of
     Id(String),
     NumericalLiteral(i32),
+    Type(Type),
 }
 
 impl Into<Regex> for Token {
@@ -83,6 +86,7 @@ impl Into<Regex> for Token {
 
             Token::Id(_) => "^[a-zA-Z_]+",
             Token::NumericalLiteral(_) => "^[0-9]+",
+            Token::Type(_) => "^(u8|u16|u32|u64|i8|i16|i32|i64|usize)",
         };
 
         Regex::from_str(str).expect("Invalid RegEx: Bug in Venlyn")
@@ -128,6 +132,8 @@ impl ToString for Token {
             Token::RightBracket => "}",
             Token::LeftSquare => "[",
             Token::RightSquare => "]",
+
+            Token::Type(t) => return t.to_string(),
         }
         .to_string()
     }
